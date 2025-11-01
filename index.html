@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Галерея изображений - Задание 7</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+
+        .gallery-container {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .gallery {
+            margin: 0 auto;
+            max-width: 900px;
+        }
+
+        .slide {
+            padding: 10px;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Стили для стрелок навигации */
+        .slick-prev, .slick-next {
+            width: 40px;
+            height: 40px;
+            z-index: 1;
+        }
+
+        .slick-prev {
+            left: -50px;
+        }
+
+        .slick-next {
+            right: -50px;
+        }
+
+        .slick-prev:before, .slick-next:before {
+            font-size: 40px;
+            color: #3498db;
+        }
+
+        /* Стили для пейджера */
+        .pager {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #2c3e50;
+        }
+
+        .pager span {
+            font-weight: bold;
+            color: #3498db;
+        }
+
+        /* Адаптивность для мобильных устройств */
+        @media (max-width: 768px) {
+            .slick-prev {
+                left: -20px;
+            }
+
+            .slick-next {
+                right: -20px;
+            }
+            
+            .slide img {
+                height: 250px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .slide img {
+                height: 200px;
+            }
+            
+            .slick-prev, .slick-next {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .slick-prev:before, .slick-next:before {
+                font-size: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Галерея изображений</h1>
+        
+        <div class="gallery-container">
+            <div class="gallery">
+                <div class="slide">
+                    <img src="https://picsum.photos/id/1015/600/400" alt="Изображение 1">
+                </div>
+                <div class="slide">
+                    <img src="https://picsum.photos/id/1016/600/400" alt="Изображение 2">
+                </div>
+                <div class="slide">
+                    <img src="https://picsum.photos/id/1018/600/400" alt="Изображение 3">
+                </div>
+                <div class="slide">
+                    <img src="https://picsum.photos/id/1020/600/400" alt="Изображение 4">
+                </div>
+                <div class="slide">
+                    <img src="https://picsum.photos/id/1021/600/400" alt="Изображение 5">
+                </div>
+                <div class="slide">
+                    <img src="https://picsum.photos/id/1022/600/400" alt="Изображение 6">
+                </div>
+                <div class="slide">
+                    <img src="https://picsum.photos/id/1023/600/400" alt="Изображение 7">
+                </div>
+                <div class="slide">
+                    <img src="https://picsum.photos/id/1024/600/400" alt="Изображение 8">
+                </div>
+            </div>
+            
+            <div class="pager">
+                Страница: <span id="current-page">1</span> из <span id="total-pages">3</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Инициализация слайдера
+            $('.gallery').slick({
+                slidesToShow: 3,
+                slidesToScroll: 1,
+                arrows: true,
+                dots: false,
+                infinite: true,
+                speed: 300,
+                responsive: [
+                    {
+                        breakpoint: 768,
+                        settings: {
+                            slidesToShow: 2
+                        }
+                    },
+                    {
+                        breakpoint: 480,
+                        settings: {
+                            slidesToShow: 1
+                        }
+                    }
+                ]
+            });
+            
+            // Обновление пейджера при изменении слайда
+            $('.gallery').on('afterChange', function(event, slick, currentSlide) {
+                const slidesToShow = slick.options.slidesToShow;
+                const totalSlides = slick.slideCount;
+                const currentPage = Math.floor(currentSlide / slidesToShow) + 1;
+                const totalPages = Math.ceil(totalSlides / slidesToShow);
+                
+                $('#current-page').text(currentPage);
+                $('#total-pages').text(totalPages);
+            });
+            
+            // Инициализация пейджера
+            const initialSlidesToShow = $('.gallery').slick('slickGetOption', 'slidesToShow');
+            const totalSlides = $('.gallery').slick('getSlick').slideCount;
+            const totalPages = Math.ceil(totalSlides / initialSlidesToShow);
+            
+            $('#total-pages').text(totalPages);
+        });
+    </script>
+</body>
+</html>
